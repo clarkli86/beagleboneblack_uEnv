@@ -1,0 +1,7 @@
+optargs=
+loadfdt=tftp ${fdtaddr} /boot/${fdtfile}
+loaduimage=mw.l 4804c134 fe1fffff; set loadaddr 0x82000000; set ipaddr 192.168.1.100; set serverip 192.168.1.11; tftp ${loadaddr} boot/zImage
+mmcboot=run mmcargs; bootz ${loadaddr} - ${fdtaddr}
+uenvcmd=i2c mw 0x24 1 0x3e; run findfdt; if test $board_name = A335BNLT; then setenv mmcdev 1; mmc dev ${mmcdev}; if mmc rescan; then setenv mmc1 1; else setenv mmc1 0; fi; fi; setenv mmcdev 0; mmc dev ${mmcdev}; if mmc rescan; then setenv mmc0 1; else setenv mmc0 0; fi; run loaduimage && run loadfdt && run mmcboot
+
+mmcroot="/dev/nfs rw ip=192.168.1.100 nfsroot=192.168.1.11:/home/clark/beagle/tmp/work/beaglebone-poky-linux-gnueabi/core-image-minimal/1.0-r0/rootfs,v3,tcp"; set mmcrootfstype nfs; boot
